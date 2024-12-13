@@ -10,5 +10,6 @@ export const useEtcStore = defineStore('etc', {
         setAt(at: string) {
             this.at = at;
         }
-    }
-})
+    },
+    persist: true,
+},)

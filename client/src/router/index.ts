@@ -1,4 +1,5 @@
 import { createRouter, createWebHashHistory, type RouteRecordRaw } from 'vue-router';
+import { useEtcStore } from '@/store/etc';
 const routes: RouteRecordRaw[] = [
     {
         path: '/login',
@@ -26,6 +27,36 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from) => {
-    
+    // console.log(to, 'to');
+    // console.log(from, 'from');
+    const etc = useEtcStore();
+
+    /**
+     *  跳转页面时回到顶部
+     * */
+
+    // chrome
+    document.body.scrollTop = 0;
+    // firefox
+    document.documentElement.scrollTop = 0;
+    // safari
+    window.pageYOffset = 0;
+
+    const at = etc.at;
+
+    if (to.path !== '/login' && !at) {
+        return '/login';
+    }
+
+    // /**
+    //  * 校正路由与菜单栏
+    //  */
+    // const toPathKey = to.path.split('/')[1];
+    // const sideBarKeys = etc.currentMenuKey[0];
+
+    // if (toPathKey !== sideBarKeys) {
+    //     etc.menuChange(toPathKey);
+    // }
+
 });
 export default router;
