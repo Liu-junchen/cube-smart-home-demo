@@ -1,0 +1,54 @@
+.menu-item-link {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    user-select: none;
+    cursor: pointer;
+    color: #a1a1a1;
+    font-size: 14px;
+    position: static;
+
+    .menu-icon {
+        width: 20px;
+        height: 20px;
+        margin-right: 12px;
+    }
+
+    .third-level-menu-name {
+        display: inline-block;
+        max-width: 120px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    &:hover {
+        .menu-icon {
+            transform: scale(1.375);
+        }
+        .room-name,
+        span,
+        .third-level-menu-name {
+            font-size: 16px !important;
+            // color: #1890ff;
+        }
+    }
+    span {
+        @include truncate-text();
+    }
+}
+
+.active-menu {
+    border: 1px solid #1890ff;
+    background-color: #e2f2ff;
+
+    .menu-item-link {
+        color: #1890ff;
+        span {
+            font-size: 16px;
+        }
+        img {
+            transform: scale(1.375);
+        }
+    }
+}
