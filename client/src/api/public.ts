@@ -54,8 +54,8 @@ function createNoce() {
     return result;
 }
 
-const createCommonHeader = (type: EReqMethod, params: object, at: string | null) => {
-    const auth = at ? `Bearer ${at}` : `Sign ${getAuthSign(type, params)}`;
+const createCommonHeader = (type: EReqMethod, params: object, at: string | null, useAt: boolean) => {
+    const auth = useAt ? `Bearer ${at}` : `Sign ${getAuthSign(type, params)}`;
     return {
         Accept: 'application/json',
         'Content-Type': 'application/json',
@@ -66,9 +66,9 @@ const createCommonHeader = (type: EReqMethod, params: object, at: string | null)
     };
 }
 
-export async function request<T>(url: string, params: object, methodType: EReqMethod, cancelToken?: CancelToken) {
+export async function request<T>(url: string, params: object, methodType: EReqMethod, useAt: boolean = true, cancelToken?: CancelToken, ) {
     const at = api.getAt();
-    const headers = createCommonHeader(methodType, params, at);
+    const headers = createCommonHeader(methodType, params, at, useAt);
 
     const axiosConfig = {
         url,
