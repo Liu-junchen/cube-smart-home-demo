@@ -5,10 +5,6 @@ const login = (params: { countryCode: string; phoneNumber: string; password: str
     return request<{ at: string }>('/user/login', params, EReqMethod.POST, false);
 }
 
-const logout = () => {
-    return request<{ at: string }>('/user/logout', {}, EReqMethod.DELETE);
-}
-
 export default {
     login
 }

@@ -1,3 +1,4 @@
 export interface IEtcState {
-    at: string
+    at: string;
+    loading: boolean;
 }

@@ -3,6 +3,8 @@ import { message } from 'ant-design-vue';
 import router from '@/router';
 import { useEtcStore } from '@/store/etc';
 import login from './login';
+import device from './device';
+import dispatchServer from './dispatchServer';
 
 /**
  * 存在at时，必须先调用该方法 初始化at
@@ -26,8 +28,10 @@ function getAt() {
 const commonErrorHandler = (data: any) => {
     // 登录状态过期或者失效
     if (data && (data.error === 402 || data.error === 401)) {
-        message.error('登录过期');
+        message.error('登录失效');
         router.push({ path: '/login' });
+        // 删除持久化存储的实效的 at
+        init('');
     }
     if (data && data.error === 500) {
         message.error('登录失败');
@@ -67,5 +71,5 @@ axios.interceptors.response.use((response) => {
 });
 
 export default {
-    init, getAt, login,
+    init, getAt, login, device, dispatchServer
 }

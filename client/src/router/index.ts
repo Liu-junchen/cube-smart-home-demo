@@ -4,18 +4,18 @@ const routes: RouteRecordRaw[] = [
     {
         path: '/login',
         name: 'login',
-        component: () => import('@/views/login/index.vue'),
+        component: () => import('@/views/login/Index.vue'),
     },
     {
         path: '/',
         name: 'index',
-        component: () => import('@/views/layout/index.vue'),
+        component: () => import('@/views/Layout/index.vue'),
         redirect: '/device',
         children: [
             {
                 path: '/device',
                 name: 'device',
-                component: () => import('@/views/device/index.vue'),
+                component: () => import('@/views/Device/index.vue'),
             }
         ]
     }

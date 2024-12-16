@@ -196,37 +196,6 @@ const login = async () => {
     }
 }
 
-:deep(.ant-modal-footer) {
-    border-top: none;
-    display: flex;
-    justify-content: center;
-
-    .nextStep,
-    .tip-close {
-        width: 310px;
-        height: 40px;
-        border-radius: 4px;
-        margin-bottom: 14px;
-        font-size: 16px;
-    }
-}
-
-:deep(.ant-modal-content) {
-    border-radius: 8px;
-
-    p {
-        text-align: center;
-        font-size: 16px;
-        margin-bottom: 20px;
-        font-weight: 600;
-    }
-
-    h2 {
-        font-size: 30px;
-        margin-bottom: 32px;
-    }
-}
-
 :deep(.ant-input) {
     padding: 0 18px;
     font-size: 14px;
