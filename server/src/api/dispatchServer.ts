@@ -1,11 +1,12 @@
 import request from './public';
-import { EReqMethod } from '../model/request';
+import { EReqMethod, EHttpPath } from '../model/request';
 
 const dispatchServer = async() => {
     return request({
         ip: '',
         path: '/dispatch/app',
-        method: EReqMethod.GET
+        method: EReqMethod.GET,
+        domain: EHttpPath.DISPATCH_API,
     });
 }
 

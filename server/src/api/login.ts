@@ -1,5 +1,5 @@
 import request from './public';
-import { EReqMethod } from '../model/request';
+import { EReqMethod, EHttpPath } from '../model/request';
 
 const login = (params: { countryCode: string; phoneNumber: string; password: string }) => {
     return request({
@@ -8,7 +8,7 @@ const login = (params: { countryCode: string; phoneNumber: string; password: str
         params,
         method: EReqMethod.POST,
         needAt: false,
-        v2Api: true,
+        domain: EHttpPath.V2_API,
     });
 }
 

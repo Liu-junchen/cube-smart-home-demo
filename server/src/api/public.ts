@@ -2,26 +2,35 @@ import axios, { AxiosRequestConfig } from "axios";
 import { type IHttpConfig, EHttpPath, type EReqMethod } from "../model/request";
 import { createNonce } from "../utils/tools";
 import { appId, getAuthSign } from "./config";
+import fs from 'fs';
+import path from 'path';
+
+const getAt = () => {
+    const userPath = path.join(__dirname, '../store/user.json');;
+    const jsonData = fs.readFileSync(userPath, 'utf8');
+    const savedData = JSON.parse(jsonData);
+    return savedData.at;
+}
 
 
-const createCommonHeader = (type: EReqMethod, params: object, at: string | null, needAt: boolean) => {
+const createCommonHeader = (type: EReqMethod, params: object, needAt: boolean) => {
+    const at = getAt();
     const auth = needAt ? `Bearer ${at}` : `Sign ${getAuthSign(type, params)}`;
     return {
         Accept: 'application/json',
         'Content-Type': 'application/json',
         'Cache-Control': 'no-store',
         'X-CK-Appid': appId,
-        'X-CK-Nonce':createNonce(),
+        'X-CK-Nonce': createNonce(),
         Authorization: auth,
     };
 }
 
 export default async function request(httpConfig: IHttpConfig): Promise<{ error: number, msg: string, data: any }> {
-    const { ip, path, method, at = '', params = {}, v2Api = false, needAt = true } = httpConfig
-    const baseUrl = v2Api ? EHttpPath.V2_API : EHttpPath.SSE;
-    const url = `https://${ip}${baseUrl}${path}`;
+    const { ip, path, method, params = {}, domain, needAt = true } = httpConfig
+    const url = `https://${ip}${domain}${path}`;
 
-    const headers = createCommonHeader(method, params, at, needAt)
+    const headers = createCommonHeader(method, params, needAt)
     const config: AxiosRequestConfig = {
         url,
         method,

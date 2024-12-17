@@ -1,3 +1,6 @@
+import fs from 'fs';
+import path from 'path';
+
 /** 生成随机数 */
 export function createNonce() {
     const chars = [
@@ -44,4 +47,13 @@ export function createNonce() {
         result += chars[num];
     }
     return result;
+}
+
+export const storeAt = (at: string) => {
+    const dataToSave = {
+        at
+    };
+    const jsonData = JSON.stringify(dataToSave, null, 2);
+    const filePath = path.join(__dirname, '../store/user.json');
+    fs.writeFileSync(filePath, jsonData);
 }

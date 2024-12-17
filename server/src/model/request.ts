@@ -25,10 +25,9 @@ export interface IHttpConfig {
     ip: string,
     path: string,
     method: EReqMethod,
-    at?: string,
     params?: any
-    /** 是否为 open api v2 */
-    v2Api?: boolean,
+    /** 域名 */
+    domain: EHttpPath,
     /** 是否需要 at 去请求接口 */
     needAt?: boolean,
 }
