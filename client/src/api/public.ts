@@ -2,57 +2,11 @@ import axios, { type CancelToken, type AxiosRequestConfig } from 'axios';
 import api from './index'
 import { getAuthSign, apiUrl, appId } from './config'
 import { type IResponse, EReqMethod } from '@/model/request';
+import { createNonce } from '@/utils/tools'
 
 // 初始化axios设置
 axios.defaults.baseURL = apiUrl;
 axios.defaults.timeout = 60000;
-
-function createNoce() {
-    const chars = [
-        '0',
-        '1',
-        '2',
-        '3',
-        '4',
-        '5',
-        '6',
-        '7',
-        '8',
-        '9',
-        'a',
-        'b',
-        'c',
-        'd',
-        'e',
-        'f',
-        'g',
-        'h',
-        'i',
-        'j',
-        'k',
-        'l',
-        'm',
-        'n',
-        'o',
-        'p',
-        'q',
-        'r',
-        's',
-        't',
-        'u',
-        'v',
-        'w',
-        'x',
-        'y',
-        'z',
-    ];
-    let result = '';
-    for (let i = 0; i < 8; i++) {
-        const num = Math.ceil(Math.random() * (chars.length - 1));
-        result += chars[num];
-    }
-    return result;
-}
 
 const createCommonHeader = (type: EReqMethod, params: object, at: string | null, useAt: boolean) => {
     const auth = useAt ? `Bearer ${at}` : `Sign ${getAuthSign(type, params)}`;
@@ -61,7 +15,7 @@ const createCommonHeader = (type: EReqMethod, params: object, at: string | null,
         'Content-Type': 'application/json',
         'Cache-Control': 'no-store',
         'X-CK-Appid': appId,
-        'X-CK-Nonce':createNoce(),
+        'X-CK-Nonce':createNonce(),
         Authorization: auth,
     };
 }

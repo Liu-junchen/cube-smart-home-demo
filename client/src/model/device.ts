@@ -78,7 +78,7 @@ export interface IDeviceParams {
     rssi: string;
 }
 
-interface ISwitchConfig {
+export interface ISwitchConfig {
     switch: ESwitchStatus;
     outlet: number;
 }

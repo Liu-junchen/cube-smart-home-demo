@@ -4,6 +4,7 @@ export const useEtcStore = defineStore('etc', {
     state: (): IEtcState => {
         return {
             at: '',
+            apikey: '',
             loading: false,
         }
     },
@@ -13,6 +14,9 @@ export const useEtcStore = defineStore('etc', {
         },
         setLoading(loading: boolean) {
             this.loading = loading;
+        },
+        setApikey(apikey: string) {
+            this.apikey = apikey;
         }
     },
     persist: true,

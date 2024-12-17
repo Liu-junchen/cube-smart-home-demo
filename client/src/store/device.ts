@@ -1,8 +1,9 @@
 
 import { defineStore } from 'pinia';
-import type { IDevice, IDeviceState }from '@/model/device';
+import type { IDevice, IDeviceData, IDeviceParams, IDeviceState }from '@/model/device';
 import { EItemType }from '@/model/device';
 import api from '@/api';
+import _ from 'lodash';
 
 export const useDeviceStore = defineStore('device', {
     state: (): IDeviceState => {
@@ -19,9 +20,10 @@ export const useDeviceStore = defineStore('device', {
                 this.thingList = data?.thingList;
             }
         },
-        setDeviceParams() {
-
-        },
+        updateDeviceStatus(deviceid: string, params: IDeviceParams) {
+            const thisDeviceParams = (this.thingList as IDeviceData[]).find(item => deviceid === item.itemData.deviceid)?.itemData.params;
+            _.assign(thisDeviceParams, params);
+        }
     },
     getters: {
         /** 返回 thing列表中所有的单通道和多通道设备 */

@@ -1,16 +1,20 @@
 <template>
     <div class="device-list">
-        <DeviceCard v-for="item in deviceStore.deviceList" :key="item.deviceid" :info="item"/>
+        <DeviceCard v-for="item in deviceStore.deviceList" :key="item.deviceid" :info="item" />
     </div>
 </template>
 <script setup lang="ts">
 import { onMounted } from 'vue';
 import { useDeviceStore } from '@/store/device';
+import { useWebSocketStore } from '@/store/websocket';
 import DeviceCard from './components/DeviceCard.vue';
+
 const deviceStore = useDeviceStore();
+const webSocketStore = useWebSocketStore();
 onMounted(() => {
-    console.log('df', deviceStore.deviceList);
-    
+    if (deviceStore.deviceList.length) {
+        webSocketStore.initDeviceWebSocket();
+    }
 })
 </script>
 <style lang="scss" scoped>

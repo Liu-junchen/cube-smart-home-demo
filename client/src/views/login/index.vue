@@ -67,11 +67,11 @@ const login = async () => {
         password: password.value,
     }
     loginLoading.value = true;
-    const res = await api.login.login(params)
-    if (res.error === 0 && res.data) {
-        api.init(res.data.at);
-        console.log('at', etc.at);
-        
+    const { error, data } = await api.login.login(params)
+    if (error === 0 && data) {
+        const { at, user: { apikey } } = data;
+        api.init(at);
+        etc.setApikey(apikey);        
         message.success('登录成功!')
         router.push('/');
     }
