@@ -63,19 +63,19 @@ export interface IDeviceParams {
     /** 单通道开关状态 */
     switch?: ESwitchStatus;
     /** 通电反应 */
-    configure: object[];
+    configure?: object[];
     /** 定时器设置 */
-    timers: Array<object>;
+    timers?: Array<object>;
     /** 网络指示灯 */
-    sledOnline: ESwitchStatus;
+    sledOnline?: ESwitchStatus;
     /** 点动设置  */
-    pulses: Array<object>;
+    pulses?: Array<object>;
     /** 固件版本 */
-    fwVersion: string;
+    fwVersion?: string;
     /** 设备芯片 id */
-    chipid: string;
+    chipid?: string;
     /** 信号强度 */
-    rssi: string;
+    rssi?: string;
 }
 
 export interface ISwitchConfig {

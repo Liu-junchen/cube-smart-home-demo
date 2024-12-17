@@ -20,9 +20,13 @@ export const useDeviceStore = defineStore('device', {
                 this.thingList = data?.thingList;
             }
         },
-        updateDeviceStatus(deviceid: string, params: IDeviceParams) {
+        updateDeviceParamsStatus(deviceid: string, params: IDeviceParams) {
             const thisDeviceParams = (this.thingList as IDeviceData[]).find(item => deviceid === item.itemData.deviceid)?.itemData.params;
             _.assign(thisDeviceParams, params);
+        },
+        updateDeviceOnlineStatus(deviceid: string, online: boolean) {
+            const thisDeviceItemData = (this.thingList as IDeviceData[]).find(item => deviceid === item.itemData.deviceid)?.itemData;
+            _.assign(thisDeviceItemData, { online });
         }
     },
     getters: {

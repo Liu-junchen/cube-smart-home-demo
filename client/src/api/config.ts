@@ -17,7 +17,7 @@ const paramsToQueryString = (params: Record<any, any>) => {
 
 const getAuthSign = (type: EReqMethod, params: object) => {
     const message = ["POST","PUT"].includes(type) ? JSON.stringify(params) : paramsToQueryString(params);
-    return CryptoJS.enc.Base64.stringify(CryptoJS.HmacSHA256(message as any, VITE_APP_SECRET));
+    return CryptoJS.enc.Base64.stringify(CryptoJS.HmacSHA256(message, VITE_APP_SECRET));
 }
 
 const apiUrl = 'https://cn-apia.coolkit.cn/v2';

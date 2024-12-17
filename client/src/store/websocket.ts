@@ -50,8 +50,11 @@ export const useWebSocketStore = defineStore('websocket', {
             })
         },
         onMessage(data: any) {
-            const { deviceid, params } = data ?? {};
-            deviceStore.updateDeviceStatus(deviceid, params);
+            const { deviceid, params, error } = data ?? {};
+            if( error !== undefined && error !== 0 ) {
+                deviceStore.updateDeviceOnlineStatus(deviceid, false)
+            }
+            deviceStore.updateDeviceParamsStatus(deviceid, params);
         }
 
     },

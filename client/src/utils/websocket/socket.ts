@@ -1,3 +1,5 @@
+import { setTimeoutPromise } from '../tools'
+
 export class Socket {
     private url: string;
     private isDestroying: boolean;
@@ -10,6 +12,9 @@ export class Socket {
     private closeFn?: any;
 
     private initParams?: any;
+    private heartbeatTimer: ReturnType<typeof setInterval> | null = null;
+    /** 心跳检测时间 */
+    private HEARTBEAT_INTERVAL: number = 10000;
 
     constructor(url: string, openFn?: any, errorFn?: any, closeFn?: any, initParams?: Function) {
         this.url = url;
@@ -36,6 +41,9 @@ export class Socket {
         this.onOpen(this.openFn);
         this.onError(this.errorFn);
         this.onClose(this.closeFn);
+
+        // 开始心跳检测
+        this.startHeartbeat();
     }
     public onError(fn: any) {
         this.ws!.onerror = (...args: any[]) => {
@@ -74,6 +82,16 @@ export class Socket {
             this.connect();
             this.isReconnecting = false;
         }, 5000);
+    }
+
+    public async startHeartbeat() {
+        // 每10秒（10000毫秒）发送一次心跳消息
+        this.heartbeatTimer = setInterval(() => {
+            if (this.ws && this.ws.readyState === WebSocket.OPEN) {
+                const heartbeatMsg = "ping";
+                this.ws.send(heartbeatMsg);
+            }
+        }, this.HEARTBEAT_INTERVAL);
     }
 
     /**

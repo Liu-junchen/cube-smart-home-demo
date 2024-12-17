@@ -67,7 +67,7 @@ const handleDeviceStatusChange = (checked: boolean, outlet: number) => {
         }
     });
     websocketStore.setDeviceStatus(props.info.deviceid, { switches })
-    deviceStore.updateDeviceStatus(props.info.deviceid, { ...params.value, switches } as any)
+    deviceStore.updateDeviceParamsStatus(props.info.deviceid, { ...params.value, switches })
 }
 </script>
 <style lang="scss">
