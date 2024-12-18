@@ -1,23 +1,23 @@
 import { Request, Response } from 'express';
 import api from '../api/index';
 import { storeJson, getJson } from '../utils/tools';
+import { IHostDevice } from '../model/iHostDevice';
 
 
-const syncDevice = () => {
+const syncDevice = async(deviceInfo: any) => {
+    const ihostDeviceInfo = new IHostDevice(deviceInfo);
+    const res = await api.iHost.syncDevice(ihostDeviceInfo);
 
 }
 
 export const syncDeviceService = async (req: Request) => {
     try {
         const tokenExist = getJson('iHost', 'token');
-        console.log('tokenExist', tokenExist);
 
         if (!tokenExist) {
             const response = await api.iHost.getIHostToken();
             const { error, data } = response;
-            console.log('response', response);
-            
-            
+
             if (error === 401) {
                 return response;
             }
@@ -25,11 +25,12 @@ export const syncDeviceService = async (req: Request) => {
             if (error === 0) {
                 const { token } = data ?? {};
                 storeJson('iHost', 'token', token);
-                syncDevice();
+                syncDevice(req.body);
             }
         }
 
-        syncDevice();
+        syncDevice(req.body);
+        return {};
 
 
     } catch (error) {

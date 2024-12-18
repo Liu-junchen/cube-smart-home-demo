@@ -30,5 +30,5 @@ const syncDevice = (params: any) => {
 }
 
 export default {
-    getIHostToken
+    getIHostToken, syncDevice
 }

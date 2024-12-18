@@ -1,5 +1,6 @@
 import fs from 'fs';
 import path from 'path';
+import os from 'os';
 
 /** 生成随机数 */
 export function createNonce() {
@@ -63,4 +64,19 @@ export const getJson = (module: string, key: string) => {
     let jsonData = fs.readFileSync(sqlPath, 'utf8');
     const savedData = JSON.parse(jsonData);
     return savedData[module][key];
+}
+
+export const getLocalIP = () => {
+    const interfaces = os.networkInterfaces();
+    let ipAddress;
+    for (const devName in interfaces) {
+        const iface = interfaces[devName];
+        for (const alias of iface!) {
+            if (alias.family === 'IPv4' && alias.address!== '127.0.0.1' &&!alias.internal) {
+                ipAddress = alias.address;
+                break;
+            }
+        }
+    }
+    return ipAddress;
 }

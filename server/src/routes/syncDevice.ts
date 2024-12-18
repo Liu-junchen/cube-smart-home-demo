@@ -2,7 +2,7 @@ import express from 'express';
 const router = express.Router();
 import { syncDeviceController } from '../controllers/syncDeviceController';
 
-router.get('/device', async (req, res) => {
+router.post('/device', async (req, res) => {
     try {
         const result = await syncDeviceController(req, res);
         res.status(200).json(result)

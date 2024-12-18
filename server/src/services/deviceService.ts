@@ -4,11 +4,11 @@ import api from '../api/index'
 export const deviceService = async (req: Request) => {
     try {
         // 获取了 thing 列表
-        const { error, data } = await api.device.getThingList(req.body);
+        const res = await api.device.getThingList(req.body);
         
         let result;
 
-        return result;
+        return res;
         
     } catch (error) {
         console.error('调用第三方接口出错:', error);

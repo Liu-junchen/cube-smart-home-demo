@@ -70,7 +70,7 @@ const switches = computed(() => {
 })
 
 const handleSyncClick = async () => {
-    const { error } = await api.syncDevice.syncDevice();
+    const { error } = await api.syncDevice.syncDevice(props.info);
     // error 为 401 时，需要在 iHost 页面确认授权 token
     if (error === 401) {
         !syncVisible.value ? syncVisible.value = true : '';
