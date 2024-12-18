@@ -19,12 +19,9 @@ export const useWebSocketStore = defineStore('websocket', {
     actions: {
         async initDeviceWebSocket() {
             /** 首先获取分配的服务地址 */
-            // const res = await api.dispatchServer.dispatchServer();
-            // // const url = `wss://${domain}:${port}/api/ws`;
-            // console.log('res', res);
-
-
-            this.deviceSocket = new DeviceSocket('wss://cn-pconnect3.coolkit.cc/api/ws', {
+            const { domain, port } = await api.dispatchServer.dispatchServer();
+            const url = `wss://${domain}:${port}/api/ws`;
+            this.deviceSocket = new DeviceSocket(url, {
                 onConnectSuccess: () => {
                     this.wsConnect = true;
                     this.userOnline();

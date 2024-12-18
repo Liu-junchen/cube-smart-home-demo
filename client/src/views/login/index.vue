@@ -70,6 +70,8 @@ const login = async () => {
     const { error, data } = await api.login.login(params)
     if (error === 0 && data) {
         const { at, user: { apikey } } = data;
+        console.log('at', at, apikey);
+        
         api.init(at);
         etc.setApikey(apikey);        
         message.success('登录成功!')

@@ -3,7 +3,7 @@ import { type IResponse, EReqMethod } from '@/model/request';
 
 // 初始化axios设置
 axios.defaults.baseURL = 'http://localhost:3000';
-axios.defaults.timeout = 60000;
+axios.defaults.timeout = 6000;
 
 export async function request<T>(url: string, params: object, methodType: EReqMethod, cancelToken?: CancelToken, ) {
     const axiosConfig = {

@@ -2,7 +2,7 @@ import express from 'express';
 const router = express.Router();
 import { dispatchServerController } from '../controllers/dispatchServerController';
 
-router.get('/dispatch', async (req, res) => {
+router.get('/app', async (req, res) => {
     try {
         const result = await dispatchServerController(req, res);
         res.status(200).json(result)

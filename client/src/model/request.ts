@@ -12,4 +12,6 @@ export interface IResponse<T> {
     error: number;
     msg?: string;
     data?: T;
+    domain?: string;
+    port?: number;
 }

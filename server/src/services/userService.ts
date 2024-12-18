@@ -2,8 +2,6 @@ import { Request, Response } from 'express';
 import api from '../api/index'
 import { storeAt } from '../utils/tools';
 
-
-// 函数用于调用第三方接口获取用户信息，此处简单示例，实际中可能需要处理更多请求头、请求参数等情况
 export const loginService = async (req: Request) => {
     try {
         const response = await api.login.login(req.body);

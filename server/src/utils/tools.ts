@@ -50,10 +50,10 @@ export function createNonce() {
 }
 
 export const storeAt = (at: string) => {
-    const dataToSave = {
-        at
-    };
-    const jsonData = JSON.stringify(dataToSave, null, 2);
-    const filePath = path.join(__dirname, '../store/user.json');
-    fs.writeFileSync(filePath, jsonData);
+    const sqlPath = path.join(__dirname, '../../../sql.json');;
+    let jsonData = fs.readFileSync(sqlPath, 'utf8');
+    const savedData = JSON.parse(jsonData);
+    savedData.user.at = at;
+    jsonData = JSON.stringify(savedData);
+    fs.writeFileSync(sqlPath, jsonData);
 }
