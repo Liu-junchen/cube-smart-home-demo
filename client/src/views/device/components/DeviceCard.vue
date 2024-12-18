@@ -4,6 +4,9 @@
             <div class="device-card__container__name">
                 {{ info.name }}
             </div>
+            <div class="device-card__container__sync" @click.stop="handleSyncClick">
+                同步
+            </div>
             <div class="device-card__container__desc">
                 {{ info.extra.ui }}
             </div>
@@ -15,25 +18,36 @@
                     通道{{ item.outlet + 1 }}
                 </div>
                 <div class="device-control-item__switch">
-                    <a-switch :checked="item.switch === ESwitchStatus.ON" @click="(checked: boolean) => handleDeviceStatusChange(checked, item.outlet)" />
+                    <a-switch :checked="item.switch === ESwitchStatus.ON"
+                        @click="(checked: boolean) => handleDeviceStatusChange(checked, item.outlet)" />
                 </div>
             </div>
             <div class="offline-mask" v-if="!info.online">
                 <div class="tip">设备离线</div>
                 <div class="check">
                     <div class="check-title">请检查：</div>
-                    <div class="check-item"><span >设备是否通电</span></div>
-                    <div class="check-item"><span >路由器是否连接外部网络</span></div>
+                    <div class="check-item"><span>设备是否通电</span></div>
+                    <div class="check-item"><span>路由器是否连接外部网络</span></div>
                 </div>
+            </div>
+        </a-modal>
+        <a-modal v-model:visible="syncVisible" :footer="null" style="width: 720px" :maskClosable="false"
+            wrap-class-name="device-sync" title="请在 ihost 页面中确认获取token后点击确认">
+            <div class="device-sync__footer">
+                <a-button @click="handleConfrimSyncClick">
+                    确认
+                </a-button>
             </div>
         </a-modal>
     </div>
 </template>
 <script setup lang="ts">
 import { type IDevice, type ISwitchConfig, ESwitchStatus } from '@/model/device';
-import { ref, computed } from 'vue';
+import { ref, computed, h } from 'vue';
 import { useWebSocketStore } from '@/store/websocket';
 import { useDeviceStore } from '@/store/device';
+import api from '@/api';
+import { message } from 'ant-design-vue';
 
 const deviceStore = useDeviceStore();
 const websocketStore = useWebSocketStore();
@@ -43,6 +57,7 @@ const props = defineProps<{
 }>();
 
 let visible = ref(false);
+let syncVisible = ref(false);
 
 const params = computed(() => props.info?.params)
 
@@ -54,8 +69,24 @@ const switches = computed(() => {
     return switchesInInfo.value?.filter((item, index) => index !== switchesInInfo.value!.length - 1);
 })
 
+const handleSyncClick = async () => {
+    const { error } = await api.syncDevice.syncDevice();
+    // error 为 401 时，需要在 iHost 页面确认授权 token
+    if (error === 401) {
+        !syncVisible.value ? syncVisible.value = true : '';
+        return false
+    }
+
+    return true;
+}
+
 const handleDeviceClick = () => {
     visible.value = true
+}
+
+const handleConfrimSyncClick = async () => {
+    const isTokenVisible = await handleSyncClick();
+    isTokenVisible ? syncVisible.value = false : message.error('还未在 ihost 获取 token')
 }
 
 const handleDeviceStatusChange = (checked: boolean, outlet: number) => {
@@ -102,6 +133,14 @@ const handleDeviceStatusChange = (checked: boolean, outlet: number) => {
             margin-bottom: 8px;
 
             &__channel-name {}
+        }
+    }
+}
+
+.device-sync {
+    .ant-modal-content {
+        .device-sync__footer {
+            @include flex(flex-end);
         }
     }
 }

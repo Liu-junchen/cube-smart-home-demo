@@ -49,11 +49,18 @@ export function createNonce() {
     return result;
 }
 
-export const storeAt = (at: string) => {
-    const sqlPath = path.join(__dirname, '../../../sql.json');;
+export const storeJson = (module: string, key: string, value?: string) => {
+    const sqlPath = path.join(__dirname, '../../../sql.json');
     let jsonData = fs.readFileSync(sqlPath, 'utf8');
     const savedData = JSON.parse(jsonData);
-    savedData.user.at = at;
+    savedData[module][key] = value;
     jsonData = JSON.stringify(savedData);
     fs.writeFileSync(sqlPath, jsonData);
+}
+
+export const getJson = (module: string, key: string) => {
+    const sqlPath = path.join(__dirname, '../../../sql.json');
+    let jsonData = fs.readFileSync(sqlPath, 'utf8');
+    const savedData = JSON.parse(jsonData);
+    return savedData[module][key];
 }

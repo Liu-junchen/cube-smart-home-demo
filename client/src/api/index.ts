@@ -5,6 +5,7 @@ import { useEtcStore } from '@/store/etc';
 import login from './login';
 import device from './device';
 import dispatchServer from './dispatchServer';
+import syncDevice from './syncDevice';
 
 /**
  * 存在at时，必须先调用该方法 初始化at
@@ -53,8 +54,11 @@ axios.interceptors.response.use((response) => {
         } = response;
 
         const { error } = data;
+        const isIHost = data.message !== undefined;
+
+
         // 通用状态码处理逻辑
-        if (url && status === 200 && error && error != 0 && error.toString().length === 3) {
+        if (url && status === 200 && error && error != 0 && error.toString().length === 3 && !isIHost) {
             console.log(`common error ${url}`);
             console.log('data', data);
             commonErrorHandler(data);
@@ -71,5 +75,5 @@ axios.interceptors.response.use((response) => {
 });
 
 export default {
-    init, getAt, login, device, dispatchServer
+    init, getAt, login, device, dispatchServer, syncDevice
 }

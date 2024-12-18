@@ -2,7 +2,7 @@ import request from './public';
 import { EReqMethod, EHttpPath } from '../model/request';
 
 const dispatchServer = async() => {
-    return request({
+    return request<undefined>({
         ip: '',
         path: '/dispatch/app',
         method: EReqMethod.GET,
