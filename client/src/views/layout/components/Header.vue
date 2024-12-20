@@ -21,7 +21,6 @@ import api from '@/api';
 import router from '@/router'
 const logout = async() => {
     // 清除 at
-    api.init('');
     router.push('/login');
 }
 </script>

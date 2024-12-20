@@ -37,3 +37,7 @@ export const userStatusService = async () => {
         console.log(error);
     }
 };
+
+export const logoutService = async () => {
+    
+}

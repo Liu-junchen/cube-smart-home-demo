@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { loginService, userStatusService } from '../services/userService';
+import { loginService, userStatusService, logoutService } from '../services/userService';
 
 export const loginController = async (req: Request, res: Response) => {
     try {
@@ -12,6 +12,14 @@ export const loginController = async (req: Request, res: Response) => {
 export const userStatusController = async (req: Request, res: Response) => {
     try {
         const result = await userStatusService();
+        return result
+    } catch (error) {
+    }
+};
+
+export const logoutController = async (req: Request, res: Response) => {
+    try {
+        const result = await logoutService();
         return result
     } catch (error) {
     }
