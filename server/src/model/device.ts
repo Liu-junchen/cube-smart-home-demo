@@ -37,6 +37,8 @@ export interface IDevice {
     params?: IDeviceParams;
     /** GSM 设备的卡状态对象 */
     gsmInfoData: object | null;
+    /** 是否同步到了 iHost */
+    synced?: boolean
 }
 
 interface IDeviceExtra {

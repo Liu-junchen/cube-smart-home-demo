@@ -34,43 +34,8 @@ export class SSEClient {
                 this.onConnectError?.();
                 console.error('SSE connection error:', error);
             };
-            // 监听消息事件，根据事件名称进行分发
-            this.eventSource.onmessage = (event) => {
-                // const data = this.parseEventData(event.data);
-                // if (data && data.name) {
-                //     const eventName = data.name;
-                //     const eventData = data.data;
-                //     if (this.eventListeners[eventName]) {
-                //         this.eventListeners[eventName].forEach(listener => listener(eventData));
-                //     }
-                // }
-            };
         } catch (error) {
             console.error('Failed to create EventSource:', error);
-        }
-    }
-
-    // 解析从后端接收到的消息数据，将其转换为ISendEvent格式
-    private parseEventData(rawData: string): ISendEvent | null {
-        try {
-            const lines = rawData.split('\n');
-            let name = '', data = {};
-            lines.forEach(line => {
-                if (line.startsWith('event: ')) {
-                    name = line.slice('event: '.length).trim();
-                } else if (line.startsWith('data: ')) {
-                    const dataPart = line.slice('data: '.length).trim();
-                    try {
-                        data = JSON.parse(dataPart);
-                    } catch (jsonError) {
-                        data = dataPart;
-                    }
-                }
-            });
-            return { name, data };
-        } catch (parseError) {
-            console.error('Failed to parse SSE event data:', parseError);
-            return null;
         }
     }
 

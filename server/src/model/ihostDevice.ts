@@ -42,6 +42,7 @@ export class IHostDevice {
     public firmware_version = '';
     /** 设备服务地址 */
     public service_address? = '';
+
     constructor(deviceInfo: any) {
         const { name, deviceid, extra: { manufacturer, model }, params: { switches, fwVersion } } = deviceInfo;
         this.third_serial_number = deviceid;

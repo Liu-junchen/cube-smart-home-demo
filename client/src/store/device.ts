@@ -20,11 +20,22 @@ export const useDeviceStore = defineStore('device', {
             }
         },
         updateDeviceSwitchesStatus(deviceid: string, params: IDeviceParams) {
-            const thisDeviceSwitches = (this.deviceList).find(item => deviceid === item.deviceid)?.params?.switches;
-            params.switches?.forEach(({ outlet: paramsSwitchOutlet, switch: paramsSwitch }) => {
-                const thisDeviceSwitchItem = thisDeviceSwitches?.find(({ outlet: thisDeviceSwitch }) => paramsSwitchOutlet === thisDeviceSwitch);
-                thisDeviceSwitchItem!.switch = paramsSwitch;
-            })
+            const thisDevice = this.deviceList.find(item => deviceid === item.deviceid);
+            
+            if (!thisDevice) return;
+            // 上报了按钮信息时
+            if (params.switches) {
+                const thisDeviceSwitches = thisDevice?.params?.switches;
+                params.switches?.forEach(({ outlet: paramsSwitchOutlet, switch: paramsSwitch }) => {
+                    const thisDeviceSwitchItem = thisDeviceSwitches?.find(({ outlet: thisDeviceSwitch }) => paramsSwitchOutlet === thisDeviceSwitch);
+                    thisDeviceSwitchItem!.switch = paramsSwitch;
+                })
+            }
+
+            // 上报了在线情况信息时
+            if (params.online !== undefined) {
+                thisDevice.online = params.online;
+            }
         },
     },
     persist: true,

@@ -3,9 +3,9 @@ const router = express.Router();
 import { loginController, userStatusController, logoutController } from '../controllers/userController';
 
 /** 获取用户登录状态 */
-router.get('/status', async (req, res) => {
+router.get('/status', (req, res) => {
     try {
-        const result = await userStatusController(req, res);
+        const result = userStatusController(req, res);
         res.status(200).json(result)
     } catch (error) {
         console.error('获取用户信息出错:', error);

@@ -9,17 +9,17 @@ export const loginController = async (req: Request, res: Response) => {
     }
 };
 
-export const userStatusController = async (req: Request, res: Response) => {
+export const userStatusController = (req: Request, res: Response) => {
     try {
-        const result = await userStatusService();
+        const result = userStatusService();
         return result
     } catch (error) {
     }
 };
 
-export const logoutController = async (req: Request, res: Response) => {
+export const logoutController = (req: Request, res: Response) => {
     try {
-        const result = await logoutService();
+        const result = logoutService();
         return result
     } catch (error) {
     }

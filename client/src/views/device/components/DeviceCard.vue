@@ -5,7 +5,7 @@
                 {{ info.name }}
             </div>
             <div class="device-card__container__sync" @click.stop="handleSyncClick">
-                同步
+                {{ syncOperateDesc }}
             </div>
             <div class="device-card__container__desc">
                 {{ info.extra.ui }}
@@ -59,19 +59,30 @@ let syncVisible = ref(false);
 
 const params = computed(() => props.info?.params)
 
+const syncOperateDesc = computed(() => {
+    const synced = props.info.synced;
+    return synced ? '取消同步' : '同步';
+})
+
 const switches = computed(() => {
     return params.value?.switches;
 })
 
 const handleSyncClick = async () => {
-    const { error } = await api.syncDevice.syncDevice(props.info);
-    // error 为 401 时，需要在 iHost 页面确认授权 token
-    if (error === 401) {
-        !syncVisible.value ? syncVisible.value = true : '';
-        return false
-    }
+    const synced = props.info.synced;
+    if (!synced) {
+        // 还未同步时去同步
+        const { error } = await api.syncDevice.syncDevice(props.info);
+        // error 为 401 时，需要在 iHost 页面确认授权 token
+        if (error === 401) {
+            !syncVisible.value ? syncVisible.value = true : '';
+            return false
+        }
 
-    return true;
+        return true;
+    } else {
+        // 已经同步了，取消同步
+    }
 }
 
 const handleDeviceClick = () => {

@@ -1,9 +1,9 @@
 import { Request, Response } from 'express';
 import api from '../api/index'
-import { storeKeyValue, getKeyValue } from '../utils/tools';
+import { storeKeyValue, getKeyValue, deleteModuleValue } from '../utils/tools';
 import { EUserStatus } from '../model/user';
-import websocket from '../websocket';
 
+/** 登录 */
 export const loginService = async (req: Request) => {
     try {
         const response = await api.login.login(req.body);
@@ -21,7 +21,8 @@ export const loginService = async (req: Request) => {
     }
 };
 
-export const userStatusService = async () => {
+/** 获取用户信息 */
+export const userStatusService = () => {
     try {
         const at = getKeyValue('user', 'at');
         const userStatus = !!at ? EUserStatus.LOGGED : EUserStatus.NOTLOGGED;
@@ -38,6 +39,17 @@ export const userStatusService = async () => {
     }
 };
 
-export const logoutService = async () => {
-    
+/** 登出 */
+export const logoutService = () => {
+    try {
+        deleteModuleValue('user');
+        return {
+            error: 0,
+            msg: '',
+            data: {}
+        };
+
+    } catch (error) {
+        console.log(error);
+    }
 }

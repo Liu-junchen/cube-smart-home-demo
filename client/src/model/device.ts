@@ -37,6 +37,8 @@ export interface IDevice {
     params?: IDeviceParams;
     /** GSM 设备的卡状态对象 */
     gsmInfoData: object | null;
+    /** 设备是否已经同步到 iHost */
+    synced: boolean;
 }
 
 interface IDeviceExtra {
@@ -76,6 +78,8 @@ export interface IDeviceParams {
     chipid?: string;
     /** 信号强度 */
     rssi?: string;
+    /** 设备在线情况 */
+    online?: boolean;
 }
 
 export interface ISwitchConfig {

@@ -20,7 +20,7 @@ import { DownOutlined } from '@ant-design/icons-vue';
 import api from '@/api';
 import router from '@/router'
 const logout = async() => {
-    // 清除 at
+    await api.user.logout();
     router.push('/login');
 }
 </script>

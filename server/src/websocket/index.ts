@@ -4,6 +4,7 @@ import api from "../api";
 import { deviceChangeSyncToIHost } from './device'
 import sse from '../utils/sse';
 
+/** 初始化 websocket 的发送消息参数 */
 const initParams = (action: string, params?: Record<string, unknown>) => {
     let result: Record<string, unknown> = {
         action,
@@ -29,7 +30,7 @@ const userOnline = () => {
 
 // 初始化 websocket
 const initDeviceWebSocket = async () => {
-    return new Promise(async(resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
         const { at, apikey } = getModuleValue('user') ?? {};
         if (deviceWebSocket || !at || !apikey) return;
         const { domain, port } = await api.dispatchServer.dispatchServer();
@@ -45,12 +46,10 @@ const initDeviceWebSocket = async () => {
                 reject(err);
             },
             onMessage: (data: any) => {
-                console.log('data', data);
-
-                if (data.action === 'update') {
+                console.log('websocket 接收到的消息 =>', data);
+                if (data.action === 'update' || data.action === 'sysmsg') {
                     const { deviceid, params } = data;
-
-                    deviceChangeSyncToIHost(deviceid, params.switches);
+                    deviceChangeSyncToIHost(deviceid, params);
                     sse.send({ name: 'change_device', data })
                 }
             }

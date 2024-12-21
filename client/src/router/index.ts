@@ -27,7 +27,7 @@ const router = createRouter({
     routes,
 });
 
-router.beforeEach((to, from) => {
+router.beforeEach(async(to, from) => {
     const etc = useEtcStore();
 
     /**
@@ -40,6 +40,9 @@ router.beforeEach((to, from) => {
     document.documentElement.scrollTop = 0;
     // safari
     window.pageYOffset = 0;
+
+    // 每次切换路由时，都去获取用户登录状态
+    await etc.getUserStatus();
 
     const userStatus = etc.userStatus;
 

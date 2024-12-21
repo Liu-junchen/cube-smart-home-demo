@@ -5,11 +5,12 @@ import websocket from '../websocket';
 import { v4 } from 'uuid';
 import sse from '../utils/sse';
 import { deviceChangeSyncToIHost } from '../websocket/device';
+import { getKeyValue } from '../utils/tools';
 
 /** 获取设备列表 */
 export const getDeviceListService = async (req: Request) => {
     try {
-        // 获取了 thing 列表
+        // 获取 thing 列表
         const { error, msg, data } = await api.device.getThingList(req.body);
         if (error === 0) {
             const { thingList } = data ?? {};
@@ -18,11 +19,24 @@ export const getDeviceListService = async (req: Request) => {
                 const { itemType, itemData } = thing;
                 return itemType === EItemType.OwnDeviceInOwnFamily && (itemData as IDevice)?.extra?.uiid === 4;
             }).map(deviceThing => deviceThing.itemData);
+
+            // 判断该设备的同步 iHost 状态
+            if (getKeyValue('iHost', 'token')) {
+                const result = await api.iHost.getIHostDevices();
+                const iHostDeviceList = result.data!.device_list;
+                (deviceList as IDevice[])?.forEach((device) => {
+                    const synced = iHostDeviceList.find((iHostDevice: any) =>
+                        iHostDevice.tags?.deviceid === device.deviceid
+                    )
+                    console.log('synced', iHostDeviceList);
+                    device.synced = synced;
+                })
+            }
             return {
                 error, msg, data: { deviceList }
             };
         } else {
-            return { error, msg, data  }
+            return { error, msg, data }
         }
     } catch (error) {
         console.log(error);
@@ -38,8 +52,11 @@ export const deviceChangeService = async (req: Request) => {
         ws?.send('update', {
             deviceid, params
         });
-        // 同时同步给 ihost 设备更新
-        deviceChangeSyncToIHost(deviceid, params.switches);
+        // 是否获取了 token，没获取过说明设备没有同步至 iHost
+        if (getKeyValue('iHost', 'token')) {
+            // 同时同步给 ihost 设备更新
+            deviceChangeSyncToIHost(deviceid, params);
+        }
         return {
             error: 0,
             msg: '',
@@ -55,8 +72,6 @@ export const deviceChangeByIHostService = async (req: Request) => {
     try {
         const deviceid = req.params.deviceid;
         const state = req.body.directive.payload.state;
-        console.log('state', state);
-        
         const switches = Object.entries(state.toggle).map(([key, value]: [any, any]) => {
             return {
                 switch: value.toggleState,

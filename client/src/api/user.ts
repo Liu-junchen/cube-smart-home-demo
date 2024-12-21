@@ -10,7 +10,12 @@ const getUserStatus = () => {
     return request<{ userStatus: EUserStatus }>('/user/status', {}, EReqMethod.GET);
 }
 
+const logout = () => {
+    return request<{}>('/user/logout', {}, EReqMethod.POST);
+}
+
 export default {
     getUserStatus,
-    login
+    login,
+    logout
 }

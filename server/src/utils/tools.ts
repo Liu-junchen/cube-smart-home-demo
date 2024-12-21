@@ -100,6 +100,26 @@ export const getModuleValue = (module: string) => {
     return savedData[module];
 }
 
+/** 从 json 文件中删除具体 key 的数据 */
+export const deleteKeyValue = (module: string, key: string) => {
+    const sqlPath = path.join(__dirname, '../../../sql.json');
+    let jsonData = fs.readFileSync(sqlPath, 'utf8');
+    const savedData = JSON.parse(jsonData);
+    delete savedData[module]?.[key];
+    jsonData = JSON.stringify(savedData);
+    fs.writeFileSync(sqlPath, jsonData);
+}
+
+/** 从 json 文件中删除整个 module 的数据 */
+export const deleteModuleValue = (module: string) => {
+    const sqlPath = path.join(__dirname, '../../../sql.json');
+    let jsonData = fs.readFileSync(sqlPath, 'utf8');
+    const savedData = JSON.parse(jsonData);
+    delete savedData?.[module];
+    jsonData = JSON.stringify(savedData);
+    fs.writeFileSync(sqlPath, jsonData);
+}
+
 export const getLocalIP = () => {
     const interfaces = os.networkInterfaces();
     let ipAddress;
