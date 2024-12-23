@@ -1,7 +1,6 @@
 import express from 'express';
 import router from './routes/index';
 import { getLocalIP } from './utils/tools';
-import websocket from './websocket';
 
 const app = express();
 const port = 3000;

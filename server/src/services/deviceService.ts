@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import api from '../api/index';
-import { EItemType, type IDevice } from '../model/device';
+import { EItemType, ISwitchConfig, type IDevice } from '../model/device';
 import websocket from '../websocket';
 import { v4 } from 'uuid';
 import sseServer from '../utils/sse/sseServer';
@@ -71,12 +71,24 @@ export const deviceChangeByIHostService = async (req: Request) => {
     try {
         const deviceid = req.params.deviceid;
         const state = req.body.directive.payload.state;
-        const switches = Object.entries(state.toggle).map(([key, value]: any) => {
-            return {
-                switch: value.toggleState,
-                outlet: parseInt(key, 10) - 1
-            };
-        });
+        let switches: ISwitchConfig[] = [];
+        if (state.power) {
+            switches = new Array(4).fill(undefined).map((_, index) => {
+                return {
+                    switch: state.power.powerState,
+                    outlet: index
+                };
+            });
+        } else if (state.toggle) {
+            switches = Object.entries(state.toggle).map(([key, value]: any) => {
+                return {
+                    switch: value.toggleState,
+                    outlet: parseInt(key, 10) - 1
+                };
+            });
+        }
+        console.log('switches', switches);
+        
 
         const ws = websocket.getDeviceWebSocket();
         // 通过 websocket 发送消息给云端，更改设备状态

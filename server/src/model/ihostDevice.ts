@@ -12,7 +12,7 @@ interface IIHostDeviceCapability {
     */
     permission: string;
     /** 通道名称 */
-    name: string;
+    name?: string;
 }
 
 export interface IThridEvent {
@@ -54,12 +54,14 @@ export class IHostDevice {
     public service_address? = '';
 
     constructor(deviceInfo: IDevice) {
-        const { name, deviceid, extra: { manufacturer, model }, params: { switches, fwVersion } } = deviceInfo;
+        console.log('deviceInfo', deviceInfo);
+        
+        const { name, deviceid, brandName: manufacturer, params: { switches, fwVersion }, productModel } = deviceInfo;
         this.third_serial_number = deviceid;
         this.name = name;
         this.manufacturer = manufacturer;
         this.firmware_version = fwVersion;
-        this.model = model;
+        this.model = productModel;
         this.tags = { deviceid };
         this.service_address = `http://${getLocalIP()}:3000/device/${deviceid}`;
 
@@ -70,6 +72,13 @@ export class IHostDevice {
                 name: `${item.outlet + 1}`
             }
         });
+
+        // 加入全开全关能力
+        this.capabilities.push({
+            capability: 'power',
+            permission: '1110',
+        })
+
         this.state = {
             toggle: {}
         };

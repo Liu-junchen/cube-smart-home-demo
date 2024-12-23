@@ -1,13 +1,13 @@
 import request from './public';
 import { EReqMethod, EHttpPath } from '../model/request';
-import { IThridEvent } from '../model/iHostDevice'
+import { type IThridEvent } from '../model/iHostDevice'
 
 /** 获取 iHost token */
 const getIHostToken = () => {
     return request<{
         token: string
     }>({
-        ip: '192.168.5.215',
+        ip: '192.168.5.214',
         path: '/bridge/access_token',
         method: EReqMethod.GET,
         domain: EHttpPath.OPEN_API,
@@ -20,7 +20,7 @@ const getIHostToken = () => {
 /** 设备和 iHost 的同步相关接口 */
 const syncDevice = (params: IThridEvent) => {
     return request({
-        ip: '192.168.5.215',
+        ip: '192.168.5.214',
         path: '/thirdparty/event',
         method: EReqMethod.POST,
         domain: EHttpPath.OPEN_API,
@@ -33,7 +33,7 @@ const syncDevice = (params: IThridEvent) => {
 /** 删除同步到 iHost 的设备*/
 const deleteSyncDevice = (serial_number: string) => {
     return request({
-        ip: '192.168.5.215',
+        ip: '192.168.5.214',
         path: `/devices/${serial_number}`,
         method: EReqMethod.DELETE,
         domain: EHttpPath.OPEN_API,
@@ -51,7 +51,7 @@ const getIHostDevices = () => {
             serial_number: string;
         }[]
     }>({
-        ip: '192.168.5.215',
+        ip: '192.168.5.214',
         path: '/devices',
         method: EReqMethod.GET,
         domain: EHttpPath.OPEN_API,

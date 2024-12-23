@@ -8,9 +8,9 @@ export const deviceChangeSyncToIHost = async (deviceid: string, params: IDeviceP
         // 首先我们获取一下 ihost 的设备列表
         const { switches, online } = params ?? {};
         const result = await api.iHost.getIHostDevices();
-        const deviceList = result.data!.device_list;
+        const deviceList = result.data?.device_list;
 
-        const serial_number = deviceList.find((item) => item.tags?.deviceid === deviceid)?.serial_number;
+        const serial_number = deviceList?.find((item) => item.tags?.deviceid === deviceid)?.serial_number;
 
         // 找不到在 iHost 下对应的设备，说明该设备还未同步
         if(!serial_number) {

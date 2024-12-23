@@ -1,28 +1,42 @@
-import { EventSource } from "eventsource";
+import { setTimeoutPromise } from '../tools';
+import { EventSource } from 'eventsource';
 
-// node 端需要初始化一个 sse 客户端连接，当设备同步到 iHost 或者设备从 iHost 删除时，node 端需要知道并通知 demo 前端
-
-/** sse 客户端 */
 export class SSEClient {
+    private url!: string;
     private eventSource: EventSource | null = null;
     private eventListeners: { [eventName: string]: ((data: any) => void)[] } = {};
 
     private onConnectSuccess?: Function;
     private onConnectError?: Function;
 
+    private HEARTBEAT_INTERVAL = 20*1000;
+
+    /** 是否在重连中 */
+    private isReconnecting = false;
+
+    /** 是否手动关闭中 */
+    private isClosing = false;
+
+    private reconnectTimer!: ReturnType<typeof setTimeout>;
+
+    /** 上一次收到心跳消息的时间戳 */
+    private heartbeatTimestamp = Date.now();
+    private checkHeartbeatTimer!: ReturnType<typeof setInterval>;
+
     constructor(url: string, { onConnectSuccess, onConnectError }: {
         onConnectSuccess?: Function;
         onConnectError?: Function;
         onMessage?: Function;
     }) {
-        this.connect(url);
+        this.url = url;
+        this.connect();
         this.onConnectSuccess = onConnectSuccess;
         this.onConnectError = onConnectError;
     }
 
-    private connect(url: string) {
+    private connect() {
         try {
-            this.eventSource = new EventSource(url);
+            this.eventSource = new EventSource(this.url);
             // 监听连接打开事件
             this.eventSource.onopen = () => {
                 this.onConnectSuccess?.();
@@ -32,7 +46,19 @@ export class SSEClient {
             this.eventSource.onerror = (error) => {
                 this.onConnectError?.();
                 console.error('SSE connection error:', error);
+                // 如果不是手动关闭连接，触发重连
+                if(!this.isClosing) {
+                    this.reconnect()
+                }
             };
+
+            this.eventSource.onmessage = () => {
+                this.heartbeatTimestamp = Date.now();
+                console.log('收到心跳了', this.heartbeatTimestamp);
+            };
+
+            // 开始进行心跳检测
+            this.startCheckHeartbeatTimer()
         } catch (error) {
             console.error('Failed to create EventSource:', error);
         }
@@ -65,7 +91,37 @@ export class SSEClient {
         if (this.eventSource) {
             this.eventSource.close();
             this.eventSource = null;
+            this.isClosing = true;
             console.log('SSE connection closed');
         }
+    }
+
+
+    // 定时监测心跳消息
+    async startCheckHeartbeatTimer() {
+        // 延迟一段时间后开启定时器，是为了防止检测时刻和心跳到来的时刻重叠带来的问题
+        await setTimeoutPromise(this.HEARTBEAT_INTERVAL / 2);
+        clearInterval(this.checkHeartbeatTimer as ReturnType<typeof setInterval>);
+        this.checkHeartbeatTimer = setInterval(() => {
+            const heartbeatTimeout = Date.now() - this.heartbeatTimestamp > this.HEARTBEAT_INTERVAL;
+            if (heartbeatTimeout) {
+                console.warn('heartbeat timeout! start reconnect!');
+                this.close();
+                this.reconnect();
+            }
+        }, this.HEARTBEAT_INTERVAL);
+    }
+
+    public reconnect() {
+        if (this.isReconnecting) {
+            return;
+        }
+
+        this.isReconnecting = true;
+        clearTimeout(this.reconnectTimer);
+        this.reconnectTimer = setTimeout(() => {
+            this.connect();
+            this.isReconnecting = false;
+        }, 5000);
     }
 }
