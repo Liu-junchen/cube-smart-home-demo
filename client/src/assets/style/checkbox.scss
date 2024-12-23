@@ -1,0 +1,22 @@
+.Checkbox {
+    .ant-checkbox-inner {
+        width: 36px;
+        height: 36px;
+    }
+
+
+    .ant-checkbox-inner::after {
+        width: 12px;
+        height: 22px;
+    }
+
+    .ant-checkbox-inner {
+        border: 2px solid #999999;
+        border-radius: 5px;
+    }
+
+    .ant-checkbox-inner::after {
+        width: 12px;
+        height: 22px;
+    }
+}

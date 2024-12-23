@@ -1,0 +1,8 @@
+.DatePicker {
+    &:deep(.ant-calendar-picker-input.ant-input) {
+        font-size: 24px;
+        width: 298px;
+        border-radius: 8px;
+        height: 58px !important;
+    }
+}
