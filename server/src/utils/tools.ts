@@ -59,12 +59,30 @@ export function createNonce() {
     return result;
 }
 
+/** 读取存储文件，如果不存在文件则创建 */
+function readOrCreateFileSync(filePath: string) {
+    try {
+        return fs.readFileSync(filePath, 'utf8');
+    } catch (err: any) {
+        if (err.code === 'ENOENT') {
+            const dirname = path.dirname(filePath);
+            // 确保文件所在目录存在，如果不存在则创建
+            if (!fs.existsSync(dirname)) {
+                fs.mkdirSync(dirname, { recursive: true });
+            }
+            fs.writeFileSync(filePath, JSON.stringify({}, null, 2), 'utf8');
+            return '{}';
+        }
+        throw err;
+    }
+}
+
 /** 存储后端键值数据到 json 文件 */
 export const storeKeyValue = (module: string, key: string, value?: any) => {
     const sqlPath = path.join(__dirname, '../../../sql.json');
-    let jsonData = fs.readFileSync(sqlPath, 'utf8');
+    let jsonData = readOrCreateFileSync(sqlPath);
     const savedData = JSON.parse(jsonData);
-    if(!savedData[module]) {
+    if (!savedData[module]) {
         savedData[module] = {};
     }
     savedData[module][key] = value;
@@ -76,7 +94,7 @@ export const storeKeyValue = (module: string, key: string, value?: any) => {
 /** 存储后端键值数据到 json 文件 */
 export const storeModuleValue = (module: string, value?: any) => {
     const sqlPath = path.join(__dirname, '../../../sql.json');
-    let jsonData = fs.readFileSync(sqlPath, 'utf8');
+    let jsonData = readOrCreateFileSync(sqlPath);
     const savedData = JSON.parse(jsonData);
     savedData[module] = value;
     jsonData = JSON.stringify(savedData);
@@ -87,7 +105,7 @@ export const storeModuleValue = (module: string, value?: any) => {
 /** 从 json 文件中获取具体模块和具体键值的数据 */
 export const getKeyValue = (module: string, key: string) => {
     const sqlPath = path.join(__dirname, '../../../sql.json');
-    let jsonData = fs.readFileSync(sqlPath, 'utf8');
+    let jsonData = readOrCreateFileSync(sqlPath);
     const savedData = JSON.parse(jsonData);
     return savedData[module]?.[key];
 }
@@ -95,7 +113,7 @@ export const getKeyValue = (module: string, key: string) => {
 /** 从 json 文件中获取具体模块的数据 */
 export const getModuleValue = (module: string) => {
     const sqlPath = path.join(__dirname, '../../../sql.json');
-    let jsonData = fs.readFileSync(sqlPath, 'utf8');
+    let jsonData = readOrCreateFileSync(sqlPath);
     const savedData = JSON.parse(jsonData);
     return savedData[module];
 }
@@ -103,7 +121,7 @@ export const getModuleValue = (module: string) => {
 /** 从 json 文件中删除具体 key 的数据 */
 export const deleteKeyValue = (module: string, key: string) => {
     const sqlPath = path.join(__dirname, '../../../sql.json');
-    let jsonData = fs.readFileSync(sqlPath, 'utf8');
+    let jsonData = readOrCreateFileSync(sqlPath);
     const savedData = JSON.parse(jsonData);
     delete savedData[module]?.[key];
     jsonData = JSON.stringify(savedData);
@@ -113,7 +131,7 @@ export const deleteKeyValue = (module: string, key: string) => {
 /** 从 json 文件中删除整个 module 的数据 */
 export const deleteModuleValue = (module: string) => {
     const sqlPath = path.join(__dirname, '../../../sql.json');
-    let jsonData = fs.readFileSync(sqlPath, 'utf8');
+    let jsonData = readOrCreateFileSync(sqlPath);
     const savedData = JSON.parse(jsonData);
     delete savedData?.[module];
     jsonData = JSON.stringify(savedData);
@@ -126,7 +144,7 @@ export const getLocalIP = () => {
     for (const devName in interfaces) {
         const iface = interfaces[devName];
         for (const alias of iface!) {
-            if (alias.family === 'IPv4' && alias.address!== '127.0.0.1' &&!alias.internal) {
+            if (alias.family === 'IPv4' && alias.address !== '127.0.0.1' && !alias.internal) {
                 ipAddress = alias.address;
                 break;
             }
