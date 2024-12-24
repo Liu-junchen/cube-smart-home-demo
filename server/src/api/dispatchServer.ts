@@ -1,5 +1,5 @@
 import request from './public';
-import { EReqMethod, EHttpPath } from '../model/request';
+import { EReqMethod, EHttpPath } from '../types/request';
 
 const dispatchServer = async() => {
     return request<undefined>({

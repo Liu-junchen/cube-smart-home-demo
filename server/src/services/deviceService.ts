@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import api from '../api/index';
-import { EItemType, ISwitchConfig, type IDevice } from '../model/device';
+import { EItemType, ISwitchConfig, type IDevice } from '../types/device';
 import websocket from '../websocket';
 import { v4 } from 'uuid';
 import sseServer from '../utils/sse/sseServer';
@@ -12,31 +12,28 @@ export const getDeviceListService = async (req: Request) => {
     try {
         // 获取 thing 列表
         const { error, msg, data } = await api.device.getThingList(req.body);
-        if (error === 0) {
-            const { thingList } = data ?? {};
-            // 过滤 thingList 中为 uiid 为 4 的开关类设备，组成新的列表
-            const deviceList = thingList?.filter((thing) => {
-                const { itemType, itemData } = thing;
-                return itemType === EItemType.OwnDeviceInOwnFamily && (itemData as IDevice)?.extra?.uiid === 4;
-            }).map(deviceThing => deviceThing.itemData);
+        if (error !== 0) return { error, msg, data }
+        const { thingList = [] } = data ?? {};
+        // 过滤 thingList 中为 uiid 为 4 的开关类设备，组成新的列表
+        const deviceList = thingList?.filter((thing) => {
+            const { itemType, itemData } = thing;
+            return itemType === EItemType.OwnDeviceInOwnFamily && (itemData as IDevice)?.extra?.uiid === 4;
+        }).map(deviceThing => deviceThing.itemData) as IDevice[] ?? [];
 
-            // 判断该设备的同步 iHost 状态
-            if (getKeyValue('iHost', 'token')) {
-                const result = await api.iHost.getIHostDevices();
-                const iHostDeviceList = result.data!.device_list;
-                (deviceList as IDevice[])?.forEach((device) => {
-                    const synced = iHostDeviceList.some((iHostDevice) =>
-                        iHostDevice.tags?.deviceid === device.deviceid
-                    )
-                    device.synced = synced;
-                })
-            }
-            return {
-                error, msg, data: { deviceList }
-            };
-        } else {
-            return { error, msg, data }
+        // 判断该设备的同步 iHost 状态
+        if (getKeyValue('iHost', 'token')) {
+            const result = await api.iHost.getIHostDevices();
+            const iHostDeviceList = result.data?.device_list ?? [];
+            deviceList?.forEach((device) => {
+                const synced = iHostDeviceList.some((iHostDevice) =>
+                    iHostDevice.tags?.deviceid === device.deviceid
+                )
+                device.synced = synced;
+            })
         }
+        return {
+            error, msg, data: { deviceList }
+        };
     } catch (error) {
         console.log(error);
     }
@@ -73,7 +70,7 @@ export const deviceChangeByIHostService = async (req: Request) => {
         const state = req.body.directive.payload.state;
         let switches: ISwitchConfig[] = [];
         if (state.power) {
-            switches = new Array(4).fill(undefined).map((_, index) => {
+            switches = Array.from({ length: 4 }).map((_, index) => {
                 return {
                     switch: state.power.powerState,
                     outlet: index
@@ -88,7 +85,6 @@ export const deviceChangeByIHostService = async (req: Request) => {
             });
         }
         console.log('switches', switches);
-        
 
         const ws = websocket.getDeviceWebSocket();
         // 通过 websocket 发送消息给云端，更改设备状态

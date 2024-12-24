@@ -1,6 +1,6 @@
 import { createRouter, createWebHashHistory, type RouteRecordRaw } from 'vue-router';
 import { useEtcStore } from '@/store/etc';
-import { EUserStatus } from '@/model/etc';
+import { EUserStatus } from '@/types/etc';
 const routes: RouteRecordRaw[] = [
     {
         path: '/login',

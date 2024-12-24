@@ -5,7 +5,7 @@ export interface IEtcState {
 
 export enum EUserStatus {
     /** 未登录 */
-    NOTLOGGED,
+    NOT_LOGED,
     /** 已登录 */
     LOGGED,
 }

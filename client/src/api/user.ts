@@ -1,6 +1,6 @@
 import { request } from './public';
-import { EReqMethod } from '@/model/request';
-import { type EUserStatus } from '@/model/etc';
+import { EReqMethod } from '@/types/request';
+import { type EUserStatus } from '@/types/etc';
 
 const login = (params: { countryCode: string; phoneNumber: string; password: string }) => {
     return request<{ at: string, user: { apikey: string; [k: string]: unknown } }>('/user/login', params, EReqMethod.POST);

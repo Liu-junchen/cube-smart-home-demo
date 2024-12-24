@@ -1,5 +1,5 @@
 import axios, { AxiosRequestConfig } from "axios";
-import { type IHttpConfig, EHttpPath, EReqMethod, IResponse } from "../model/request";
+import { type IHttpConfig, EHttpPath, EReqMethod, IResponse } from "../types/request";
 import { createNonce } from "../utils/tools";
 import { appId, getAuthSign } from "./config";
 import { getKeyValue } from "../utils/tools";

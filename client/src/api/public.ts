@@ -1,5 +1,5 @@
 import axios, { type CancelToken, type AxiosRequestConfig } from 'axios';
-import { type IResponse, EReqMethod } from '@/model/request';
+import { type IResponse, EReqMethod } from '@/types/request';
 
 // 初始化axios设置
 axios.defaults.baseURL = 'http://localhost:3000';

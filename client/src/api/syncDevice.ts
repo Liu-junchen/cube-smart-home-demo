@@ -1,6 +1,6 @@
-import type { IDevice } from '@/model/device';
+import type { IDevice } from '@/types/device';
 import { request } from './public';
-import { EReqMethod } from '@/model/request';
+import { EReqMethod } from '@/types/request';
 
 /** 同步设备到 iHost */
 const syncDevice = (params: IDevice) => {

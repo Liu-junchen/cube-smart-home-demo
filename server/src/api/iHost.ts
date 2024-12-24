@@ -1,6 +1,6 @@
 import request from './public';
-import { EReqMethod, EHttpPath } from '../model/request';
-import { type IThridEvent } from '../model/iHostDevice'
+import { EReqMethod, EHttpPath } from '../types/request';
+import { type IThridEvent } from '../types/iHostDevice'
 
 /** 获取 iHost token */
 const getIHostToken = () => {
