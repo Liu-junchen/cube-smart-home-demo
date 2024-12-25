@@ -104,7 +104,8 @@ export class SSEClient {
         clearInterval(this.checkHeartbeatTimer as ReturnType<typeof setInterval>);
         this.checkHeartbeatTimer = setInterval(() => {
             const heartbeatTimeout = Date.now() - this.heartbeatTimestamp > this.HEARTBEAT_INTERVAL;
-            if (heartbeatTimeout) {
+             // 如果心跳消息接收超时并且不是被用户手动关闭的情况下，触发重连
+            if (heartbeatTimeout && !this.isClosing) {
                 console.warn('heartbeat timeout! start reconnect!');
                 this.close();
                 this.reconnect();

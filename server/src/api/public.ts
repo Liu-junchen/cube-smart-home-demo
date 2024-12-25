@@ -1,5 +1,5 @@
 import axios, { AxiosRequestConfig } from "axios";
-import { type IHttpConfig, EHttpPath, EReqMethod, IResponse } from "../model/request";
+import { type IHttpConfig, EHttpPath, EReqMethod, IResponse } from "../types/request";
 import { createNonce } from "../utils/tools";
 import { appId, getAuthSign } from "./config";
 import { getKeyValue } from "../utils/tools";
@@ -34,7 +34,7 @@ const allowRequest = (needAt: boolean, needToken: boolean) => {
 
 export default async function request<T>(httpConfig: IHttpConfig) {
     try {
-        const { ip, path, method, params = {}, domain, needAt = true, https = true, needToken = false } = httpConfig
+        const { path, method, params = {}, domain, needAt = true, needToken = false } = httpConfig
 
         if(!allowRequest(needAt, needToken)) {
             return {
@@ -42,7 +42,7 @@ export default async function request<T>(httpConfig: IHttpConfig) {
                 msg: 'need Bearer'!,
             }
         }
-        const url = `${https ? 'https' : 'http'}://${ip}${domain}${path}`;
+        const url = `${domain}${path}`;
 
         const headers = createCommonHeader(method, params, needAt, needToken)
         const config: AxiosRequestConfig = {

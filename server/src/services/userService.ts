@@ -1,7 +1,9 @@
 import { Request, Response } from 'express';
 import api from '../api/index'
 import { storeKeyValue, getKeyValue, deleteModuleValue } from '../utils/tools';
-import { EUserStatus } from '../model/user';
+import { EUserStatus } from '../types/user';
+import websocket from '../websocket';
+import sseClient from '../sse'
 
 /** 登录 */
 export const loginService = async (req: Request) => {
@@ -25,7 +27,7 @@ export const loginService = async (req: Request) => {
 export const userStatusService = () => {
     try {
         const at = getKeyValue('user', 'at');
-        const userStatus = !!at ? EUserStatus.LOGGED : EUserStatus.NOTLOGGED;
+        const userStatus = !!at ? EUserStatus.LOGGED : EUserStatus.NOT_LOGED;
         return {
             error: 0,
             msg: '',
@@ -42,7 +44,12 @@ export const userStatusService = () => {
 /** 登出 */
 export const logoutService = () => {
     try {
+        // 删除本地存储的 user 信息
         deleteModuleValue('user');
+        // 断开 websocket 客户端连接
+        websocket.destroyDeviceWebSocket();
+        // 断开 sse 客户端连接
+        sseClient.destroySSEClient();
         return {
             error: 0,
             msg: '',

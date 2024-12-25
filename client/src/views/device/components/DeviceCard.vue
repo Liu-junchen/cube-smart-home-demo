@@ -10,7 +10,7 @@
                 </a-button>
             </div>
             <div class="device-card-container__desc">
-                {{ info.extra.ui }}
+                {{ info?.extra?.ui }}
             </div>
             <div class="device-card-container__control">
                 <div class="device-card-container__control-item" v-for="item in switches">
@@ -35,7 +35,7 @@
     </div>
 </template>
 <script setup lang="ts">
-import { type IDevice, type ISwitchConfig, ESwitchStatus } from '@/model/device';
+import { type IDevice, type ISwitchConfig, ESwitchStatus } from '@/types/device';
 import { ref, computed, h } from 'vue';
 import { useDeviceStore } from '@/store/device';
 import { useEtcStore } from '@/store/etc';
@@ -60,7 +60,7 @@ const syncOperateDesc = computed(() => {
 })
 
 const switches = computed(() => {
-    return params.value?.switches;
+    return params.value?.switches ?? [];
 })
 
 const handleSyncClick = async () => {
@@ -92,7 +92,7 @@ const handleSyncClick = async () => {
 }
 
 const handleDeviceStatusChange = (checked: boolean, outlet: number) => {
-    const changeSwitches: ISwitchConfig[] = switches.value!.map(item => {
+    const changeSwitches: ISwitchConfig[] = switches.value.map(item => {
         if (item.outlet === outlet) {
             return { ...item, switch: checked ? ESwitchStatus.ON : ESwitchStatus.OFF }
         } else {

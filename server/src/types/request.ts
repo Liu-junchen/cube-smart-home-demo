@@ -20,14 +20,13 @@ export type IResponse<T> = {
 
 /** 请求域名枚举 */
 export enum EHttpPath {
-	SSE = '/open-api/v1/sse/bridge',
-    V2_API = 'cn-apia.coolkit.cn/v2',
-    DISPATCH_API = 'cn-dispa.coolkit.cn',
-    OPEN_API = '/open-api/v2/rest'
+	SSE = 'http://192.168.5.214/open-api/v1/sse/bridge',
+    V2_API = 'https://cn-apia.coolkit.cn/v2',
+    DISPATCH_API = 'https://cn-dispa.coolkit.cn',
+    OPEN_API = 'http://192.168.5.214/open-api/v2/rest'
 }
 
 export interface IHttpConfig {
-    ip: string,
     path: string,
     method: EReqMethod,
     params?: any
@@ -37,5 +36,4 @@ export interface IHttpConfig {
     needAt?: boolean,
     /** 是否需要 token 去请求 iHost 接口 */
     needToken?: boolean,
-    https?: boolean,
 }

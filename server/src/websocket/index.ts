@@ -25,7 +25,7 @@ const initParams = (action: string, params?: Record<string, unknown>) => {
 let deviceWebSocket: DeviceSocket | null = null;
 
 const userOnline = () => {
-    deviceWebSocket!.send('userOnline')
+    deviceWebSocket?.send('userOnline')
 }
 
 // 初始化 websocket
@@ -65,12 +65,17 @@ const initDeviceWebSocket = async () => {
     })
 }
 
+const destroyDeviceWebSocket = () => {
+    if(!deviceWebSocket) return;
+    deviceWebSocket.destroy();
+}
+
 const getDeviceWebSocket = () => {
     return deviceWebSocket;
 }
 
 export default {
-    initDeviceWebSocket, getDeviceWebSocket
+    initDeviceWebSocket, getDeviceWebSocket, destroyDeviceWebSocket
 }
 
 

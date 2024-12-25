@@ -30,15 +30,15 @@ export class DeviceSocket {
         this.ws = new Socket(
             url,
             () => {
-                console.log('连接上了');
+                console.log('websocket 连接上了');
                 onConnectSuccess();
             },
             () => {
-                console.log('连接出现了异常');
+                console.log('websocket 连接出现了异常');
                 onConnectError();
             },
             () => { 
-                console.log('连接关闭了');
+                console.log('websocket 连接关闭了');
                 onConnectClose?.();
             },
             initParams,

@@ -41,7 +41,7 @@ export class IHostDevice {
     /** 设备能力字段 */
     public capabilities: IIHostDeviceCapability[] = [];
     /** 设备能力状态 */
-    public state: Record<string, any> | null = null;
+    public state: Record<string, any> = {};
     /** 设备标签 */
     public tags: Record<string, any> | null = null;
     /** 设备制造商 */
@@ -56,7 +56,7 @@ export class IHostDevice {
     constructor(deviceInfo: IDevice) {
         console.log('deviceInfo', deviceInfo);
         
-        const { name, deviceid, brandName: manufacturer, params: { switches, fwVersion }, productModel } = deviceInfo;
+        const { name, deviceid, brandName: manufacturer, params: { switches = [], fwVersion }, productModel } = deviceInfo;
         this.third_serial_number = deviceid;
         this.name = name;
         this.manufacturer = manufacturer;
@@ -65,7 +65,7 @@ export class IHostDevice {
         this.tags = { deviceid };
         this.service_address = `http://${getLocalIP()}:3000/device/${deviceid}`;
 
-        this.capabilities = switches!.map((item) => {
+        this.capabilities = switches.map((item) => {
             return {
                 capability: 'toggle',
                 permission: '1110',
@@ -82,8 +82,8 @@ export class IHostDevice {
         this.state = {
             toggle: {}
         };
-        switches?.forEach((item: { switch: string, outlet: number }) => {
-            this.state!.toggle[item.outlet + 1] = {
+        switches.forEach((item: { switch: string, outlet: number }) => {
+            this.state.toggle[item.outlet + 1] = {
                 toggleState: item.switch
             }
         })

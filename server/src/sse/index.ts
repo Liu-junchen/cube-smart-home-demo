@@ -1,11 +1,11 @@
 import sseServer from "../utils/sse/sseServer";
 import { SSEClient } from "../utils/sse/sseClient";
 
-let sseClent: SSEClient | null = null;
+let sseClient: SSEClient | null = null;
 // 初始化 与 iHost 服务端的 sse 链接
 const initSSEClient = async () => {
     return new Promise(async (resolve, reject) => {
-        sseClent = new SSEClient(`http://192.168.5.214/api/v1/sse/bridge?id=${Date.now()}`, {
+        sseClient = new SSEClient(`http://192.168.5.214/api/v1/sse/bridge?id=${Date.now()}`, {
             onConnectSuccess: () => {
                 console.log('与 iHost 服务的 sse 建立成功连接了');
                 resolve(true);
@@ -15,7 +15,7 @@ const initSSEClient = async () => {
                 reject(err);
             }
         })
-        sseClent.subscribe('delete_report', (data) => {
+        sseClient.subscribe('delete_report', (data) => {
             const { thing_data: thingData } = data ?? {};
             const { deviceid } = thingData?.tags ?? {};
             console.log('deviceid', deviceid);
@@ -25,10 +25,15 @@ const initSSEClient = async () => {
     })
 }
 
-const getSSEClent = () => {
-    return sseClent;
+const getSSEClient = () => {
+    return sseClient;
+}
+
+const destroySSEClient = () => {
+    if(!sseClient) return;
+    sseClient?.close();
 }
 
 export default {
-    initSSEClient, getSSEClent
+    initSSEClient, getSSEClient, destroySSEClient
 }

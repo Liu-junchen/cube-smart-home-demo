@@ -1,6 +1,6 @@
 
 import { defineStore } from 'pinia';
-import type { IDevice, IDeviceData, IDeviceParams, IDeviceState, ISwitchConfig } from '@/model/device';
+import type { IDevice, IDeviceData, IDeviceParams, IDeviceState, ISwitchConfig } from '@/types/device';
 import api from '@/api';
 import _ from 'lodash';
 
@@ -16,7 +16,7 @@ export const useDeviceStore = defineStore('device', {
         async getDeviceList() {
             const { error, data, msg } = await api.device.getDeviceList({ lang: 'cn' });
             if (error === 0) {
-                this.deviceList = data!.deviceList;
+                this.deviceList = data?.deviceList ?? [];
             }
         },
         updateDeviceStatus(deviceid: string, params: { switches?: ISwitchConfig[]; online?: boolean; deleted?: boolean }) {
@@ -25,9 +25,9 @@ export const useDeviceStore = defineStore('device', {
             if (!thisDevice) return;
             // 上报了按钮信息时
             if (params.switches) {
-                const thisDeviceSwitches = thisDevice?.params?.switches;
-                params.switches?.forEach(({ outlet: paramsSwitchOutlet, switch: paramsSwitch }) => {
-                    const thisDeviceSwitchItem = thisDeviceSwitches?.find(({ outlet: thisDeviceSwitch }) => paramsSwitchOutlet === thisDeviceSwitch);
+                const thisDeviceSwitches = thisDevice?.params?.switches ?? [];;
+                params.switches.forEach(({ outlet: paramsSwitchOutlet, switch: paramsSwitch }) => {
+                    const thisDeviceSwitchItem = thisDeviceSwitches.find(({ outlet: thisDeviceSwitch }) => paramsSwitchOutlet === thisDeviceSwitch);
                     thisDeviceSwitchItem!.switch = paramsSwitch;
                 })
             }

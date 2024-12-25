@@ -1,5 +1,5 @@
 import { request } from './public';
-import { EReqMethod } from '@/model/request';
+import { EReqMethod } from '@/types/request';
 
 /** 初始化 nodejs 的 sse 客户端 */
 const initSSE = () => {

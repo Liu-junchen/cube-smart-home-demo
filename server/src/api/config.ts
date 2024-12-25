@@ -1,6 +1,6 @@
 import CryptoJS from 'crypto-js';
 import * as dotenv from 'dotenv';
-import { EReqMethod } from '../model/request';
+import { EReqMethod } from '../types/request';
 
 dotenv.config();
 

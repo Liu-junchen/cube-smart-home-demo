@@ -98,22 +98,20 @@ interface IGroup {
     params: object;
 }
 
-/** Thing类型
- * * 1=用户自己的家庭下的自己的设备
- * * 2=用户自己的家庭下别人分享的设备
- * * 3=用户自己的家庭下自己的群组
- * * 4=用户自己的家庭下别人分享的群组（保留）
- * * 5=用户在他人家庭下家庭主人的设备
- * * 6=用户在他人家庭下分享给家庭主人的设备
- * * 7=用户在他人家庭下家庭主人的群组 
- * */
 export enum EItemType {
+    /** 用户自己的家庭下的自己的设备 */
     OwnDeviceInOwnFamily = 1,
+    /** 用户自己的家庭下别人分享的设备 */
     SharedDeviceInOwnFamily = 2,
+    /** 用户自己的家庭下自己的群组 */
     OwnGroupInOwnFamily = 3,
+    /** 用户自己的家庭下别人分享的群组（保留） */
     ReservedSharedGroupInOwnFamily = 4,
+    /** 用户在他人家庭下家庭主人的设备 */
     OwnerDeviceInOthersFamily = 5,
+    /** 用户在他人家庭下分享给家庭主人的设备 */
     SharedToOwnerDeviceInOthersFamily = 6,
+    /** 用户在他人家庭下家庭主人的群组 */
     OwnerGroupInOthersFamily = 7
 }
 

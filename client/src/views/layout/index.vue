@@ -23,18 +23,18 @@
 import Header from './components/Header.vue';
 import { useEtcStore } from '@/store/etc';
 import { useDeviceStore } from '@/store/device';
-import { useSseStore } from '@/store/sse';
+import { useSSEStore } from '@/store/sse';
 import { onMounted } from 'vue';
 import api from '@/api';
 
 const etc = useEtcStore();
 const deviceStore = useDeviceStore();
-const sseStore = useSseStore();
+const sseStore = useSSEStore();
 
 onMounted(async () => {
     // 首页初始化时，获取 device 列表、建立前后端 sse 连接，建立后端和云服务器之间 websocket 连接、建立后端和云服务器直接的 sse 连接
     etc.setLoading(true);
-    await Promise.all([deviceStore.getDeviceList(), sseStore.initSseClient(), api.websocket.initWebSocket(), api.sse.initSSE()]);
+    await Promise.all([deviceStore.getDeviceList(), sseStore.initSSEClient(), api.websocket.initWebSocket(), api.sse.initSSE()]);
     etc.setLoading(false);
 })
 

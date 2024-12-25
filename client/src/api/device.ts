@@ -1,6 +1,6 @@
 import { request } from './public';
-import { EReqMethod } from '@/model/request';
-import type { IDeviceData, ISwitchConfig } from '@/model/device';
+import { EReqMethod } from '@/types/request';
+import type { IDeviceData, ISwitchConfig } from '@/types/device';
 
 const getDeviceList = (params: { lang: string }) => {
     return request<IDeviceData>('/device/list', params, EReqMethod.GET);

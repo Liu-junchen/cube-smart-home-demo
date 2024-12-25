@@ -19,8 +19,13 @@
 import { DownOutlined } from '@ant-design/icons-vue';
 import api from '@/api';
 import router from '@/router'
+import { useSSEStore } from '@/store/sse';
+
+const sseStore = useSSEStore();
+
 const logout = async() => {
     await api.user.logout();
+    sseStore.destroySSEClient();
     router.push('/login');
 }
 </script>

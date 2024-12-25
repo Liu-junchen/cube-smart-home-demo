@@ -1,11 +1,11 @@
 import { defineStore } from 'pinia';
-import { type IEtcState, EUserStatus} from '@/model/etc';
+import { type IEtcState, EUserStatus} from '@/types/etc';
 import api from '@/api';
 export const useEtcStore = defineStore('etc', {
     state: (): IEtcState => {
         return {
             loading: false,
-            userStatus: EUserStatus.NOTLOGGED,
+            userStatus: EUserStatus.NOT_LOGED,
         }
     },
     actions: {
@@ -15,7 +15,7 @@ export const useEtcStore = defineStore('etc', {
         async getUserStatus() {
             const { error, data }  = await api.user.getUserStatus();
             if(error === 0) {
-                const { userStatus } = data!;
+                const { userStatus =  EUserStatus.NOT_LOGED } = data ?? {};
                 this.userStatus = userStatus;
             }
         }
