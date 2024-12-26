@@ -54,7 +54,7 @@ export class SSEClient {
 
             this.eventSource.onmessage = () => {
                 this.heartbeatTimestamp = Date.now();
-                console.log('收到心跳了', this.heartbeatTimestamp);
+                console.log('收到 iHost 服务发送过来的心跳了', this.heartbeatTimestamp);
             };
 
             // 开始进行心跳检测

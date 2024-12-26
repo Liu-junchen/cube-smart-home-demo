@@ -3,6 +3,7 @@ import { DeviceSocket } from "../utils/websocket";
 import api from "../api";
 import { deviceChangeSyncToIHost } from './device'
 import sseServer from '../utils/sse/sseServer';
+import EE from '../utils/eventEmitter'
 
 /** 初始化 websocket 的发送消息参数 */
 const initParams = (action: string, params?: Record<string, unknown>) => {
@@ -49,6 +50,9 @@ const initDeviceWebSocket = async () => {
             },
             onMessage: (data: any) => {
                 console.log('websocket 接收到的消息 =>', data);
+                if (data === 'pong') {
+                    EE.emit('pingpong');
+                }
                 if (data.config) {
                     const { hb = 1, hbInterval = 97 } = data.config;
                     hb && deviceWebSocket?.startHeartbeat(hbInterval);
@@ -66,7 +70,7 @@ const initDeviceWebSocket = async () => {
 }
 
 const destroyDeviceWebSocket = () => {
-    if(!deviceWebSocket) return;
+    if (!deviceWebSocket) return;
     deviceWebSocket.destroy();
 }
 
