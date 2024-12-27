@@ -5,7 +5,7 @@ let sseClient: SSEClient | null = null;
 // 初始化 与 iHost 服务端的 sse 链接
 const initSSEClient = async () => {
     return new Promise(async (resolve, reject) => {
-        sseClient = new SSEClient(`http://192.168.5.214/api/v1/sse/bridge?id=${Date.now()}`, {
+        sseClient = new SSEClient(`http://192.168.5.219/api/v1/sse/bridge?id=${Date.now()}`, {
             onConnectSuccess: () => {
                 console.log('与 iHost 服务的 sse 建立成功连接了');
                 resolve(true);
